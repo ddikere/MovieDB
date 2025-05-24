@@ -1,6 +1,6 @@
 const MOVIE_API_BASE = 'https://api.themoviedb.org/3/movie';
 const TV_API_BASE = 'https://api.themoviedb.org/3/tv';
-const API_KEY = 'your_tmdb_api_key'; // Store in Cloudflare Pages environment variables
+const API_KEY = '4c8cc3e098ceb0542e148d3cd59a130c'; // Store in Cloudflare Pages environment variables
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 async function fetchTrending(type, containerId) {
