@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="preload" href="css/home.css" as="style">
+  <link rel="preload" href="js/main.js" as="script">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script defer src="js/main.js"></script>
+</head>
+<body>
+  <div class="navbar">
+    <img src="logo.jpeg" alt="Logo" />
+    <div class="nav-links">
+      <a href="#">Movies</a>
+      <a href="#">TV Shows</a>
+      <a href="#">Anime</a>
+      <input type="text" class="search-bar" placeholder="Search..." />
+    </div>
+  </div>
+
+  <div class="banner" style="background-image: url('banner.jpeg')">
+    <h1>Welcome to My Website</h1>
+  </div>
+
+  <div class="row">
+    <h2>Trending Movies</h2>
+    <div class="list" id="trending-movies"></div>
+  </div>
+
+  <div class="row">
+    <h2>Trending TV Shows</h2>
+    <div class="list" id="trending-tv"></div>
+  </div>
+
+  <div class="row">
+    <h2>Trending Anime</h2>
+    <div class="list" id="trending-anime"></div>
+  </div>
+
+  <div class="modal" id="movie-modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-body">
+        <img id="modal-poster" src="" alt="Poster" />
+        <div class="modal-text">
+          <h2 id="modal-title"></h2>
+          <p id="modal-overview"></p>
+          <p><strong>Release Date:</strong> <span id="modal-release"></span></p>
+          <p><strong>Rating:</strong> <span id="modal-rating" class="stars"></span></p>
+        </div>
+      </div>
+      <div class="server-selector">
+        <label>Change Server:</label>
+        <a href="#" target="_blank" id="server-1">Vidsrc.cc</a>
+        <a href="#" target="_blank" id="server-2">Vidsrc.me</a>
+        <a href="#" target="_blank" id="server-3">Player.Videasy.net</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-modal" id="search-modal">
+    <span class="close">&times;</span>
+    <input type="text" id="search-input" placeholder="Search for movies or TV shows..." />
+    <div class="results" id="search-results"></div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-content">
+      <p>&copy; 2025 My Website. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Disclaimer</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
