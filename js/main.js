@@ -1,27 +1,19 @@
-const MOVIE_API_BASE = 'https://apimocine.vercel.app/movie';
-const TV_API_BASE = 'https://apimocine.vercel.app/tv';
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500'; // Adjust if apimocine uses a different image base
+const MOVIE_API_BASE = 'https://api.themoviedb.org/3/movie';
+const TV_API_BASE = 'https://api.themoviedb.org/3/tv';
+const API_KEY = 'your_tmdb_api_key'; // Store in Cloudflare Pages environment variables
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
-// Function to fetch and display trending content
 async function fetchTrending(type, containerId) {
   try {
-    const response = await fetch(`${type === 'movie' ? MOVIE_API_BASE : TV_API_BASE}/popular`);
-    if (response.status === 404) {
-      document.getElementById(containerId).innerHTML = `<p>${type === 'movie' ? 'Movies' : 'TV shows'} endpoint not found.</p>`;
-      return;
-    }
-    if (response.status === 403) {
-      document.getElementById(containerId).innerHTML = `<p>Access to ${type === 'movie' ? 'movies' : 'TV shows'} API is forbidden. Check API permissions.</p>`;
-      return;
-    }
+    const response = await fetch(`${type === 'movie' ? MOVIE_API_BASE : TV_API_BASE}/popular?api_key=${API_KEY}`);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     const data = await response.json();
-    const items = data.results || data;
+    const items = data.results;
     const container = document.getElementById(containerId);
     container.innerHTML = '';
     items.forEach(item => {
       const img = document.createElement('img');
-      img.src = item.poster_path.startsWith('http') ? item.poster_path : `${IMAGE_BASE_URL}${item.poster_path}`;
+      img.src = `${IMAGE_BASE_URL}${item.poster_path}`;
       img.alt = item.title || item.name;
       img.dataset.id = item.id;
       img.dataset.type = type;
@@ -34,14 +26,13 @@ async function fetchTrending(type, containerId) {
   }
 }
 
-// Function to open modal with item details
 async function openModal(id, type) {
   try {
-    const response = await fetch(`${type === 'movie' ? MOVIE_API_BASE : TV_API_BASE}/${id}`);
+    const response = await fetch(`${type === 'movie' ? MOVIE_API_BASE : TV_API_BASE}/${id}?api_key=${API_KEY}`);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     const item = await response.json();
     const modal = document.getElementById('movie-modal');
-    document.getElementById('modal-poster').src = item.poster_path.startsWith('http') ? item.poster_path : `${IMAGE_BASE_URL}${item.poster_path}`;
+    document.getElementById('modal-poster').src = `${IMAGE_BASE_URL}${item.poster_path}`;
     document.getElementById('modal-title').textContent = item.title || item.name;
     document.getElementById('modal-overview').textContent = item.overview || 'No description available.';
     document.getElementById('modal-release').textContent = item.release_date || item.first_air_date || 'N/A';
@@ -56,25 +47,24 @@ async function openModal(id, type) {
   }
 }
 
-// Function to handle search
 async function searchContent(query) {
   try {
-    const movieResponse = await fetch(`${MOVIE_API_BASE}/search?q=${encodeURIComponent(query)}`);
-    const tvResponse = await fetch(`${TV_API_BASE}/search?q=${encodeURIComponent(query)}`);
+    const movieResponse = await fetch(`${MOVIE_API_BASE}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
+    const tvResponse = await fetch(`${TV_API_BASE}/search/tv?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
     const results = [];
     if (movieResponse.ok) {
       const movieData = await movieResponse.json();
-      results.push(...(movieData.results || movieData).map(item => ({ ...item, type: 'movie' })));
+      results.push(...movieData.results.map(item => ({ ...item, type: 'movie' })));
     }
     if (tvResponse.ok) {
       const tvData = await tvResponse.json();
-      results.push(...(tvData.results || tvData).map(item => ({ ...item, type: 'tv' })));
+      results.push(...tvData.results.map(item => ({ ...item, type: 'tv' })));
     }
     const resultsContainer = document.getElementById('search-results');
     resultsContainer.innerHTML = '';
     results.forEach(item => {
       const img = document.createElement('img');
-      img.src = item.poster_path.startsWith('http') ? item.poster_path : `${IMAGE_BASE_URL}${item.poster_path}`;
+      img.src = `${IMAGE_BASE_URL}${item.poster_path}`;
       img.alt = item.title || item.name;
       img.dataset.id = item.id;
       img.dataset.type = item.type;
@@ -90,7 +80,6 @@ async function searchContent(query) {
     document.getElementById('search-results').innerHTML = '<p>Error loading search results: ' + error.message + '</p>';
   }
 }
-
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
   fetchTrending('movie', 'trending-movies');
